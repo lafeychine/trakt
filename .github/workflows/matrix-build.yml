@@ -13,7 +13,7 @@ jobs:
     name: Trakt
     secrets: inherit
 
-    uses: rocq-trakt/trakt/.github/workflows/matrix-template.yml@ci-matrix-revdeps
+    uses: rocq-trakt/trakt/.github/workflows/matrix-template.yml@master
     with:
       repository: .
 
