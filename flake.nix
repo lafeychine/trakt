@@ -4,7 +4,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     rocq-utils = {
-      url = "git+https://codeberg.org/lafeychine/rocq-utils";
+      url = "github:lafeychine/rocq-utils";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
