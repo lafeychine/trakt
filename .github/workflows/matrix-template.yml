@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      packages: ${{ steps.discover.outputs.packages }}
+      packages: ${{ steps.discover.outputs.packages || steps.discover-reverse.outputs.packages }}
 
     steps:
       - uses: actions/checkout@v7
@@ -27,8 +27,16 @@ jobs:
 
       - name: Get all versions
         id: discover
+        if: ${{ inputs.override-input == '' }}
         run: |
           PACKAGES=$(nix eval --json ${{ inputs.repository }}#checks.x86_64-linux --apply builtins.attrNames)
+          echo "packages=${PACKAGES}" >> "$GITHUB_OUTPUT"
+
+      - name: Get all versions from a reversed dependency
+        id: discover-reverse
+        if: ${{ inputs.override-input != '' }}
+        run: |
+          PACKAGES=$(nix eval --json ${{ inputs.repository }}#checks.x86_64-linux --override-input ${{ inputs.override-input }} . --apply builtins.attrNames)
           echo "packages=${PACKAGES}" >> "$GITHUB_OUTPUT"
 
   matrix:
@@ -44,7 +52,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: nixbuild/nix-quick-install-action@v35
 
-      - name: Check whether the build is in cache
+      - name: Check whether the build is in the Attic cache
         id: cache
         run: |
           HASH="$(nix eval --raw ${{ inputs.repository }}#checks.x86_64-linux.${{ matrix.package }})"
@@ -60,10 +68,11 @@ jobs:
           token: ${{ secrets.ATTIC_TOKEN }}
 
       - name: Build specific version
-        if: ${{ steps.cache.outputs.status != '200' }}
+        if: ${{ steps.cache.outputs.status != '200' && inputs.override-input == '' }}
         run: |
-          if [ -n "${{ inputs.override-input }}" ]; then
-            nix build ${{ inputs.repository }}#checks.x86_64-linux.${{ matrix.package }} --override-input ${{ inputs.override-input }} . --print-build-logs
-          else
-            nix build ${{ inputs.repository }}#checks.x86_64-linux.${{ matrix.package }} --print-build-logs
-          fi
+          nix build ${{ inputs.repository }}#checks.x86_64-linux.${{ matrix.package }} --print-build-logs
+
+      - name: Build reversed specific version
+        if: ${{ steps.cache.outputs.status != '200' && inputs.override-input != '' }}
+        run: |
+          nix build ${{ inputs.repository }}#checks.x86_64-linux.${{ matrix.package }} --override-input ${{ inputs.override-input }} . --print-build-logs
