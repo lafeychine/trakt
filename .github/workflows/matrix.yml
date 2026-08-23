@@ -13,6 +13,7 @@ jobs:
     name: ${{ matrix.name }}
     secrets:
       ATTIC_ENDPOINT: ${{ secrets.ATTIC_ENDPOINT }}
+      ATTIC_CACHE: ${{ secrets.ATTIC_CACHE }}
       ATTIC_TOKEN: ${{ secrets.ATTIC_TOKEN }}
 
     strategy:
@@ -29,10 +30,11 @@ jobs:
             repository: github:SMTCoq/Sniper
             override-input: SMTCoq/trakt
 
-    uses: rocq-trakt/trakt/.github/workflows/matrix-template.yml@master
+    uses: lafeychine/rocq-utils/.github/workflows/matrix-template.yml@main
     with:
       repository: ${{ matrix.repository }}
       override-input: ${{ matrix.override-input }}
+      use-attic: true
 
   build-success:
     if: ${{ always() }}

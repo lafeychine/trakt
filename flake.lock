@@ -58,11 +58,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783585727,
-        "narHash": "sha256-GRKihDcL+6ySSS2FUHa1cjJnCk8RztXq5TvwYFfb0lY=",
+        "lastModified": 1787516723,
+        "narHash": "sha256-xysvviks9irVhQrhu8NbuxW2B5or2eDdyNOUQi4HDxE=",
         "owner": "lafeychine",
         "repo": "rocq-utils",
-        "rev": "f3e509c4fb9f4a0fbc1f3282f5a493e07bb55565",
+        "rev": "c4d3bebbe0c51af236872d9fc98c838e229420a2",
         "type": "github"
       },
       "original": {
