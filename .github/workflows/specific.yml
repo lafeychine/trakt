@@ -43,5 +43,5 @@ jobs:
               rocq = "${{ inputs.rocq || 'master' }}";
               stdlib = "${{ inputs.stdlib || 'master' }}";
               rocq-elpi = "${{ inputs.rocq-elpi || 'master' }}";
-              trakt = "${{ inputs.trakt || 'master' }}";
+              trakt = "${{ inputs.trakt || 'dev' }}";
             }' --print-build-logs
