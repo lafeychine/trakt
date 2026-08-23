@@ -1,4 +1,4 @@
-name: Build Trakt against reverse dependencies
+name: Build Trakt
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  reverse:
+  build:
     name: ${{ matrix.name }}
     secrets:
       ATTIC_ENDPOINT: ${{ secrets.ATTIC_ENDPOINT }}
@@ -19,6 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - name: Trakt
+            repository: .
+            override-input: self
           - name: SMTCoq
             repository: github:SMTCoq/SMTCoq
             override-input: trakt
@@ -31,12 +34,12 @@ jobs:
       repository: ${{ matrix.repository }}
       override-input: ${{ matrix.override-input }}
 
-  reverse-success:
+  build-success:
     if: ${{ always() }}
-    needs: reverse
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
       - name: Has the matrix failed?
-        if: ${{ needs.reverse.result != 'success' }}
+        if: ${{ needs.build.result != 'success' }}
         run: exit 1
