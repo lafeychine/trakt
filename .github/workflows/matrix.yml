@@ -35,6 +35,8 @@ jobs:
       repository: ${{ matrix.repository }}
       override-input: ${{ matrix.override-input }}
       use-attic: true
+      # NOTE: This is acceptable, these secrets are used for read/write access to the CI cache.
+      allow-unsafe-pr-checkout: true
 
   build-success:
     if: ${{ always() }}
