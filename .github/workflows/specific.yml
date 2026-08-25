@@ -25,6 +25,12 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
 
+    env:
+      TRAKT: >-
+        ${{ github.event_name == 'pull_request' && 'dev' ||
+            github.event_name == 'schedule' && 'master' ||
+            github.event_name == 'workflow_dispatch' && (inputs.trakt || 'master') }}
+
     steps:
       - uses: actions/checkout@v7
       - uses: nixbuild/nix-quick-install-action@v35
@@ -43,5 +49,5 @@ jobs:
               rocq = "${{ inputs.rocq || 'master' }}";
               stdlib = "${{ inputs.stdlib || 'master' }}";
               rocq-elpi = "${{ inputs.rocq-elpi || 'master' }}";
-              trakt = "${{ inputs.trakt || 'dev' }}";
+              trakt = builtins.getEnv "TRAKT";
             }' --print-build-logs
